@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using MEC;
 using Mistaken.API.Diagnostics;
 using Mistaken.API.Extensions;
@@ -40,7 +41,27 @@ namespace Mistaken.BetterMutes
         {
             while (true)
             {
-                global::MuteHandler.Reload();
+                // Normaly I whould use MuteHandler.Reload() but it console logs "Loading saved mutes..." and I don't what it
+                global::MuteHandler._path = GameCore.ConfigSharing.Paths[1] + "mutes.txt";
+                try
+                {
+                    using (StreamReader streamReader = new StreamReader(global::MuteHandler._path))
+                    {
+                        string text;
+                        while ((text = streamReader.ReadLine()) != null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(text))
+                            {
+                                global::MuteHandler.Mutes.Add(text.Trim());
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    global::ServerConsole.AddLog("Can't load the mute file!", ConsoleColor.Gray);
+                }
+
                 yield return Timing.WaitForSeconds(60);
             }
         }
