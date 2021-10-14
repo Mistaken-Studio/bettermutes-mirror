@@ -90,7 +90,8 @@ namespace Mistaken.BetterMutes
             if (intercomMute)
                 player.IsIntercomMuted = true;
             else
-                player.IsMuted = true;
+                player.ReferenceHub.dissonanceUserSetup.AdministrativelyMuted = true;
+
             bool disconnect = reason.Contains("-dc");
             if (disconnect)
                 reason = reason.Replace("-dc", string.Empty);
@@ -153,7 +154,7 @@ namespace Mistaken.BetterMutes
                     if (mute.Intercom)
                         player.IsIntercomMuted = false;
                     else
-                        player.IsMuted = false;
+                        player.ReferenceHub.dissonanceUserSetup.AdministrativelyMuted = false;
                 }
 
                 break;
@@ -189,6 +190,6 @@ namespace Mistaken.BetterMutes
             public bool Intercom;
         }
 
-        private static string Path => Paths.Configs + "/BetterMutes.txt";
+        private static string Path => System.IO.Path.Combine(Paths.Configs, "BetterMutes.txt");
     }
 }
