@@ -11,7 +11,7 @@ namespace Mistaken.BetterMutes
     /// <inheritdoc/>
     internal class Translation : ITranslation
     {
-        public string DisconnectMessage { get; set; } = "Zostałeś wyciszony";
+        public string DisconnectMessage { get; set; } = "You have been muted by server administrator.";
 
         public string Never { get; set; } = "NEVER";
 
