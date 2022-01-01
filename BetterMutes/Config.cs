@@ -15,6 +15,8 @@ namespace Mistaken.BetterMutes
         /// <inheritdoc/>
         public bool IsEnabled { get; set; } = true;
 
+        public bool KickMuted { get; set; } = false;
+
         /// <summary>
         /// Gets or sets a value indicating whether debug should be displayed.
         /// </summary>

@@ -29,12 +29,14 @@ namespace Mistaken.BetterMutes
         {
             Exiled.Events.Handlers.Player.Verified += this.Handle<Exiled.Events.EventArgs.VerifiedEventArgs>((ev) => this.Player_Verified(ev));
             Exiled.Events.Handlers.Server.RestartingRound += this.Handle(() => this.Server_RestartingRound(), "RoundRestart");
+            Exiled.Events.Handlers.Player.PreAuthenticating += this.Handle<Exiled.Events.EventArgs.PreAuthenticatingEventArgs>((ev) => this.Player_PreAuthenticating(ev));
         }
 
         public override void OnDisable()
         {
             Exiled.Events.Handlers.Player.Verified -= this.Handle<Exiled.Events.EventArgs.VerifiedEventArgs>((ev) => this.Player_Verified(ev));
             Exiled.Events.Handlers.Server.RestartingRound -= this.Handle(() => this.Server_RestartingRound(), "RoundRestart");
+            Exiled.Events.Handlers.Player.PreAuthenticating -= this.Handle<Exiled.Events.EventArgs.PreAuthenticatingEventArgs>((ev) => this.Player_PreAuthenticating(ev));
         }
 
         private IEnumerator<float> AutoMuteReload()
@@ -84,6 +86,26 @@ namespace Mistaken.BetterMutes
 
             ev.Player.Broadcast("MUTE", 5, message, Broadcast.BroadcastFlags.AdminChat);
             ev.Player.SendConsoleMessage(message, "red");
+        }
+
+        private void Player_PreAuthenticating(Exiled.Events.EventArgs.PreAuthenticatingEventArgs ev)
+        {
+            if (!PluginHandler.Instance.Config.KickMuted)
+                return;
+            var mute = MuteHandler.GetMute(ev.UserId);
+            if (!mute.HasValue)
+                return;
+            if (mute.Value.Intercom)
+                return;
+            var writer = new LiteNetLib.Utils.NetDataWriter();
+            writer.Put((byte)10);
+            string reason = mute.Value.Reason == "removeme" ? "No reason provided" : mute.Value.Reason;
+            if (mute.Value.EndTime == -1)
+                writer.Put($"You are muted so you can't play on RolePlay servers.. You are muted for \"{reason}\", mute has no end date, ask Admin to unmute you.");
+            else
+                writer.Put($"You are muted so you can't play on RolePlay servers.. You are muted for \"{reason}\" until {new DateTime(mute.Value.EndTime):dd.MM.yyyy HH:mm:ss} UTC");
+            ev.Request.Reject(writer);
+            ev.Disallow();
         }
     }
 }
