@@ -27,16 +27,16 @@ namespace Mistaken.BetterMutes
 
         public override void OnEnable()
         {
-            Exiled.Events.Handlers.Player.Verified += this.Handle<Exiled.Events.EventArgs.VerifiedEventArgs>((ev) => this.Player_Verified(ev));
-            Exiled.Events.Handlers.Server.RestartingRound += this.Handle(() => this.Server_RestartingRound(), "RoundRestart");
-            Exiled.Events.Handlers.Player.PreAuthenticating += this.Handle<Exiled.Events.EventArgs.PreAuthenticatingEventArgs>((ev) => this.Player_PreAuthenticating(ev));
+            Exiled.Events.Handlers.Player.Verified += this.Player_Verified;
+            Exiled.Events.Handlers.Server.RestartingRound += this.Server_RestartingRound;
+            Exiled.Events.Handlers.Player.PreAuthenticating += this.Player_PreAuthenticating;
         }
 
         public override void OnDisable()
         {
-            Exiled.Events.Handlers.Player.Verified -= this.Handle<Exiled.Events.EventArgs.VerifiedEventArgs>((ev) => this.Player_Verified(ev));
-            Exiled.Events.Handlers.Server.RestartingRound -= this.Handle(() => this.Server_RestartingRound(), "RoundRestart");
-            Exiled.Events.Handlers.Player.PreAuthenticating -= this.Handle<Exiled.Events.EventArgs.PreAuthenticatingEventArgs>((ev) => this.Player_PreAuthenticating(ev));
+            Exiled.Events.Handlers.Player.Verified -= this.Player_Verified;
+            Exiled.Events.Handlers.Server.RestartingRound -= this.Server_RestartingRound;
+            Exiled.Events.Handlers.Player.PreAuthenticating -= this.Player_PreAuthenticating;
         }
 
         private IEnumerator<float> AutoMuteReload()
