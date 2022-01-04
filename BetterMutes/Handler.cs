@@ -45,9 +45,10 @@ namespace Mistaken.BetterMutes
             {
                 // Normaly I whould use MuteHandler.Reload() but it generate console logs "Loading saved mutes..." and I don't what it
                 global::MuteHandler._path = GameCore.ConfigSharing.Paths[1] + "mutes.txt";
+                string path = global::MuteHandler._path;
                 try
                 {
-                    using (StreamReader streamReader = new StreamReader(global::MuteHandler._path))
+                    using (StreamReader streamReader = new StreamReader(path))
                     {
                         string text;
                         while ((text = streamReader.ReadLine()) != null)
@@ -58,10 +59,12 @@ namespace Mistaken.BetterMutes
                             }
                         }
                     }
+
+                    this.Log.Debug("Loaded mute file", PluginHandler.Instance.Config.VerbouseOutput);
                 }
                 catch
                 {
-                    global::ServerConsole.AddLog("Can't load the mute file!", ConsoleColor.Gray);
+                    this.Log.Warn($"Can't load the mute file from path: {path}");
                 }
 
                 yield return Timing.WaitForSeconds(60);
