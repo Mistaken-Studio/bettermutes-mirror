@@ -46,6 +46,9 @@ namespace Mistaken.BetterMutes
                 // Normaly I whould use MuteHandler.Reload() but it generate console logs "Loading saved mutes..." and I don't what it
                 global::MuteHandler._path = GameCore.ConfigSharing.Paths[1] + "mutes.txt";
                 string path = global::MuteHandler._path;
+
+                global::MuteHandler.Mutes.Clear();
+
                 try
                 {
                     using (StreamReader streamReader = new StreamReader(path))
